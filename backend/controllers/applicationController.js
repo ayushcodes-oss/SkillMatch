@@ -48,8 +48,66 @@ const getMyApplications = async (req, res) => {
     });
   }
 };
+// Get Applications for Recruiter's Jobs
+const getRecruiterApplications = async (req,res) =>{
+  try{
+    const applications = await Application.find().populate({
+      path :"job",
+      match :{recruiter:req.user.id}
+    })
+    .populate("student","name email")
+    const filteredApplications  = applications.filter((application) => applications.job !== null);
+    res.status(200).json(filteredApplications);
+  } catch(error){
+    res.status(500).json({
+      message:"Server Error",
+      error : error.message
+    });
+  }
+};
+
+// Update Application Status
+const updateApplicationStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    const application = await Application.findById(req.params.id)
+      .populate("job");
+
+    if (!application) {
+      return res.status(404).json({
+        message: "Application not found"
+      });
+    }
+
+    // Check if this job belongs to logged-in recruiter
+    if (application.job.recruiter.toString() !== req.user.id) {
+      return res.status(403).json({
+        message: "You can only update applications for your jobs"
+      });
+    }
+
+    application.status = status;
+
+    await application.save();
+
+    res.status(200).json({
+      message: "Application status updated successfully",
+      application
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Error",
+      error: error.message
+    });
+  }
+};
+
 
 module.exports = {
   applyForJob,
-  getMyApplications
+  getMyApplications,
+  getRecruiterApplications,
+  updateApplicationStatus
 };
