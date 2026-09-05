@@ -1,11 +1,17 @@
 const express = require("express");
-
 const router = express.Router();
 
 const {
     protect,
     recruiterOnly
 } = require("../middleware/authMiddleware");
+
+const validate = require("../middleware/validateMiddleware");
+
+const {
+    jobSchema,
+    jobIdSchema
+} = require("../validation/schemas");
 
 const {
     createJob,
@@ -21,11 +27,12 @@ router.post(
     "/",
     protect,
     recruiterOnly,
+    validate(jobSchema),
     createJob
 );
 
 
-// Search / Filter / Pagination
+// Get All Jobs
 router.get(
     "/",
     protect,
@@ -37,6 +44,7 @@ router.get(
 router.get(
     "/:id",
     protect,
+    validate(jobIdSchema, "params"),
     getJob
 );
 
@@ -46,6 +54,8 @@ router.put(
     "/:id",
     protect,
     recruiterOnly,
+    validate(jobIdSchema, "params"),
+    validate(jobSchema),
     updateJob
 );
 
@@ -55,6 +65,7 @@ router.delete(
     "/:id",
     protect,
     recruiterOnly,
+    validate(jobIdSchema, "params"),
     deleteJob
 );
 

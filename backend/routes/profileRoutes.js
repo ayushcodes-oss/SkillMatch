@@ -1,12 +1,51 @@
 const express = require("express");
 const router = express.Router();
-const { protect } = require("../middleware/authMiddleware");
-const {createProfile, getProfile,updateProfile,deleteProfile } = require("../controllers/profileController");
-console.log("protect:", protect);
-console.log("getProfile:", getProfile);
 
-router.post("/", protect, createProfile);
-router.get("/", protect, getProfile);
-router.put("/", protect, updateProfile);
-router.delete("/", protect, deleteProfile);
+const { protect } = require("../middleware/authMiddleware");
+const validate = require("../middleware/validateMiddleware");
+
+const {profileSchema} = require("../validation/schemas");
+
+const {
+    createProfile,
+    getProfile,
+    updateProfile,
+    deleteProfile
+} = require("../controllers/profileController");
+
+
+// Create Profile
+router.post(
+    "/",
+    protect,
+    validate(profileSchema),
+    createProfile
+);
+
+
+// Get Profile
+router.get(
+    "/",
+    protect,
+    getProfile
+);
+
+
+// Update Profile
+router.put(
+    "/",
+    protect,
+    validate(profileSchema),
+    updateProfile
+);
+
+
+// Delete Profile
+router.delete(
+    "/",
+    protect,
+    deleteProfile
+);
+
+
 module.exports = router;

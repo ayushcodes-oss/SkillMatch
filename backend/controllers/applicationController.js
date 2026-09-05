@@ -2,21 +2,11 @@ const Application = require("../models/Application");
 const Job = require("../models/Job");
 
 
-// ==================== APPLY FOR JOB ====================
 
 const applyForJob = async (req, res) => {
     try {
+        const { job } = req.body;
 
-        const { job } = req.body || {};
-
-        // Check Job ID
-        if (!job) {
-            return res.status(400).json({
-                message: "Job ID is required"
-            });
-        }
-
-        // Check Job exists
         const jobExists = await Job.findById(job);
 
         if (!jobExists) {
@@ -25,41 +15,49 @@ const applyForJob = async (req, res) => {
             });
         }
 
-        // Check duplicate application
-        const existingApplication = await Application.findOne({
-            student: req.user.id,
-            job: job
-        });
+        const existingApplication =
+            await Application.findOne({
+                student: req.user.id,
+                job: job
+            });
 
         if (existingApplication) {
             return res.status(400).json({
-                message: "You have already applied for this job"
+                message:
+                    "You have already applied for this job"
             });
         }
 
-        // Create application
-        const application = await Application.create({
-            student: req.user.id,
-            job: job
-        });
+        const application =
+            await Application.create({
+                student: req.user.id,
+                job: job
+            });
 
         res.status(201).json({
-            message: "Job application submitted successfully",
+            message:
+                "Job application submitted successfully",
             application
         });
 
     } catch (error) {
 
+        // MongoDB duplicate key protection
+        if (error.code === 11000) {
+            return res.status(400).json({
+                message:
+                    "You have already applied for this job"
+            });
+        }
+
         res.status(500).json({
             message: "Server Error",
             error: error.message
         });
-
     }
 };
 
 
-// ==================== GET MY APPLICATIONS ====================
 
 const getMyApplications = async (req, res) => {
     try {
@@ -85,8 +83,6 @@ const getMyApplications = async (req, res) => {
     }
 };
 
-
-// ==================== GET RECRUITER APPLICATIONS ====================
 
 const getRecruiterApplications = async (req, res) => {
     try {
@@ -136,8 +132,6 @@ const getRecruiterApplications = async (req, res) => {
     }
 };
 
-
-// ==================== UPDATE APPLICATION STATUS ====================
 
 const updateApplicationStatus = async (req, res) => {
     try {
@@ -224,8 +218,6 @@ const updateApplicationStatus = async (req, res) => {
     }
 };
 
-
-// ==================== EXPORT ====================
 
 module.exports = {
     applyForJob,
