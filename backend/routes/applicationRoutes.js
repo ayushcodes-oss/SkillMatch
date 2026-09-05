@@ -1,24 +1,38 @@
 const express = require("express");
+
 const router = express.Router();
 
 const { protect } = require("../middleware/authMiddleware");
 
-const {
-  applyForJob,
-  getMyApplications,
-  getRecruiterApplications,
-  updateApplicationStatus
-} = require("../controllers/applicationController");
+const applicationController = require("../controllers/applicationController");
 
-// Apply for  job
-router.post("/", protect, applyForJob);
 
-// Get my applications
-router.get("/my", protect, getMyApplications);
+router.post(
+    "/",
+    protect,
+    applicationController.applyForJob
+);
 
-// Get applications for my jobs
-router.get("/recruiter", protect, getRecruiterApplications);
 
-router.put("/:id/status", protect, updateApplicationStatus);
+router.get(
+    "/my",
+    protect,
+    applicationController.getMyApplications
+);
+
+
+router.get(
+    "/recruiter",
+    protect,
+    applicationController.getRecruiterApplications
+);
+
+
+router.put(
+    "/:id/status",
+    protect,
+    applicationController.updateApplicationStatus
+);
+
 
 module.exports = router;

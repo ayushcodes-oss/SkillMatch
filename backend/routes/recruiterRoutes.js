@@ -3,8 +3,16 @@ const router = express.Router();
 
 const{protect,recruiterOnly} = require("../middleware/authMiddleware");
 
-const{recruiterDashboard} = require("../controllers/recruiterController");
+const {
+  recruiterDashboard,
+  getRecruiterJobs
+} = require("../controllers/recruiterController");
 
-router.get("/dashboard",protect,recruiterOnly,recruiterDashboard);
+router.get(
+  "/jobs",
+  protect,
+  recruiterOnly,
+  getRecruiterJobs
+);
 
 module.exports = router;

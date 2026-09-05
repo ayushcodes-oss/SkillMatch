@@ -15,12 +15,14 @@ const profileRoutes = require("./routes/profileRoutes");
 const recruiterRoutes = require("./routes/recruiterRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 const applicationRoutes = require("./routes/applicationRoutes");
+const errorHandler = require("./middleware/errorMiddleware");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/recruiter", recruiterRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applications", applicationRoutes);
+app.use(errorHandler);
 
 
 app.get("/", (req, res) => {
