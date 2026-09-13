@@ -146,6 +146,32 @@ const getJobs = async (req, res) => {
     }
 };
 
+// ==================== GET RECRUITER'S JOBS ====================
+
+const getRecruiterJobs = async (req, res) => {
+    try {
+
+        const jobs = await Job.find({
+            recruiter: req.user.id
+        })
+        .populate("recruiter", "name email")
+        .sort({ _id: -1 });
+
+
+        res.status(200).json({
+            jobs
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: "Server Error",
+            error: error.message
+        });
+
+    }
+};
+
 
 // ==================== GET SINGLE JOB ====================
 
@@ -254,12 +280,11 @@ const deleteJob = async (req, res) => {
 };
 
 
-// ==================== EXPORT ====================
-
 module.exports = {
     createJob,
     getJobs,
+    getRecruiterJobs,
     getJob,
     updateJob,
     deleteJob
-};
+};;

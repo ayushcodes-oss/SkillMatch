@@ -4,34 +4,27 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 
-// =========================
-// REGISTER
-// =========================
+
 
 const register = async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
-
         const existingUser = await User.findOne({ email });
-
         if (existingUser) {
             return res.status(400).json({
                 message: "User already exists"
             });
         }
-
         const hashedPassword = await bcrypt.hash(
             password,
             10
         );
-
         const user = await User.create({
             name,
             email,
             password: hashedPassword,
             role: role || "student"
         });
-
         res.status(201).json({
             message: "User registered successfully",
             user: {
@@ -41,15 +34,12 @@ const register = async (req, res) => {
                 role: user.role
             }
         });
-
     } catch (error) {
-
         if (error.code === 11000) {
             return res.status(400).json({
                 message: "Email already registered"
             });
         }
-
         res.status(500).json({
             message: "Server Error",
             error: error.message
@@ -58,9 +48,7 @@ const register = async (req, res) => {
 };
 
 
-// =========================
-// LOGIN
-// =========================
+
 
 const login = async (req, res) => {
     try {
@@ -178,9 +166,7 @@ const changePassword = async (req, res) => {
 };
 
 
-// =========================
-// FORGOT PASSWORD
-// =========================
+
 
 const forgotPassword = async (req, res) => {
     try {
@@ -227,9 +213,6 @@ const forgotPassword = async (req, res) => {
 };
 
 
-// =========================
-// RESET PASSWORD
-// =========================
 
 const resetPassword = async (req, res) => {
     try {

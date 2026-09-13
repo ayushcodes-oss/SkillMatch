@@ -16,6 +16,7 @@ const {
 const {
     createJob,
     getJobs,
+    getRecruiterJobs,
     getJob,
     updateJob,
     deleteJob
@@ -57,6 +58,17 @@ router.put(
     validate(jobIdSchema, "params"),
     validate(jobSchema),
     updateJob
+);
+
+
+
+// Get Recruiter's Jobs
+
+router.get(
+    "/recruiter/my",
+    protect,
+    recruiterOnly,
+    getRecruiterJobs
 );
 
 
