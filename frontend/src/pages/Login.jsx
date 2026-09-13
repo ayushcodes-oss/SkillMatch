@@ -104,6 +104,13 @@ function Login() {
       </div>
     </div>
   );
+  localStorage.setItem("token", response.data.token);
+localStorage.setItem("user", JSON.stringify(response.data.user));
+
+window.dispatchEvent(new Event("authChange"));
+
+navigate("/dashboard");
+  
 }
 
 export default Login;

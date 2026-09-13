@@ -28,6 +28,7 @@ app.use("/api/jobs", jobRoute);
 app.use("/api/applications", applicationRoute);
 
 
+
 // Home
 app.get("/", (req, res) => {
     res.status(200).json({

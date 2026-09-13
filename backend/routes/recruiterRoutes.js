@@ -8,6 +8,16 @@ const {
   getRecruiterJobs
 } = require("../controllers/recruiterController");
 
+
+// Recruiter Dashboard Statistics
+
+router.get(
+  "/dashboard",
+  protect,
+  recruiterOnly,
+  recruiterDashboard
+);
+
 router.get(
   "/jobs",
   protect,

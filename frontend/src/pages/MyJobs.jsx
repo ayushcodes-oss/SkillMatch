@@ -184,6 +184,7 @@ function MyJobs() {
                 >
                   View
                 </Link>
+                <Link to={`/applicants?job=${job._id}`}className="view-button">View Applicants</Link>
 
                 <button
                   className="delete-job-button"

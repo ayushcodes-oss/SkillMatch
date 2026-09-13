@@ -3,9 +3,6 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-
-
-
 const register = async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
@@ -40,6 +37,7 @@ const register = async (req, res) => {
                 message: "Email already registered"
             });
         }
+
         res.status(500).json({
             message: "Server Error",
             error: error.message
