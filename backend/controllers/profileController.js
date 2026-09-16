@@ -1,15 +1,10 @@
 const Profile = require("../models/Profile");
 
-
-// ==================== CREATE PROFILE ====================
-
 const createProfile = async (req, res) => {
     try {
-
         const existingProfile = await Profile.findOne({
             user: req.user.id
         });
-
         if (existingProfile) {
             return res.status(400).json({
                 message: "Profile already exists"

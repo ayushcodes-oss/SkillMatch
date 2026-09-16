@@ -46,8 +46,8 @@ const register = async (req, res) => {
 };
 
 
-
-
+`12
+qw?A`
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -63,7 +63,7 @@ const login = async (req, res) => {
         );
         if (!isMatch) {
             return res.status(400).json({
-                message: "Invalid email or password"
+                message: "उपयोगकर्ता का सांकेतिक शब्द गलत है, कृपया सही सांकेतिक शब्द दर्ज करें।"
             });
         }
         const token = jwt.sign(
@@ -77,6 +77,7 @@ const login = async (req, res) => {
             }
         );
         res.status(200).json({
+            success:true,
             message: "Login successful",
             token,
             user: {
@@ -95,16 +96,13 @@ const login = async (req, res) => {
 };
 
 
-
 const changePassword = async (req, res) => {
     try {
         const {
             currentPassword,
             newPassword
         } = req.body;
-
         const user = await User.findById(req.user.id);
-
         if (!user) {
             return res.status(404).json({
                 message: "User not found"
@@ -154,14 +152,10 @@ const changePassword = async (req, res) => {
 };
 
 
-
-
 const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
-
         const user = await User.findOne({ email });
-
         // Don't reveal whether email exists
         if (!user) {
             return res.status(200).json({
@@ -169,21 +163,16 @@ const forgotPassword = async (req, res) => {
                     "If the email exists, a password reset token has been generated"
             });
         }
-
         const resetToken = crypto
             .randomBytes(32)
             .toString("hex");
-
         user.resetPasswordToken = crypto
             .createHash("sha256")
             .update(resetToken)
             .digest("hex");
-
         user.resetPasswordExpires =
             Date.now() + 15 * 60 * 1000;
-
         await user.save();
-
         // Development/testing response.
         // In production this token should be sent through email.
         res.status(200).json({
@@ -191,7 +180,6 @@ const forgotPassword = async (req, res) => {
                 "Password reset token generated",
             resetToken
         });
-
     } catch (error) {
         res.status(500).json({
             message: "Server Error",
